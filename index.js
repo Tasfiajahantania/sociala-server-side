@@ -34,10 +34,18 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const postCollection = client.db('sociala').collection('post');
+        const aboutCollection = client.db('sociala').collection('about');
+
         app.get('/sociala-post', async(req, res) => {
             const query = {};
             const post = await postCollection.find(query).sort({_id: -1}).toArray();
             res.send(post);
+
+        })
+        app.get('/about', async(req, res) => {
+            const query = {};
+            const about = await aboutCollection.find(query).toArray();
+            res.send(about);
 
         })
         app.get('/sociala-top-post', async(req, res) => {
@@ -45,6 +53,12 @@ async function run() {
             const post = await postCollection.find(query).limit(3).sort({like: -1}).toArray();
             res.send(post);
 
+        })
+        app.get('/post/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const post = await postCollection.findOne(query);
+            res.send(post);
         })
         
         app.post('/sociala-post', async(req, res) => {
@@ -54,21 +68,11 @@ async function run() {
             res.send(result)
         })
 
-        app.put('/post/:id', async (req, res) => {
+        app.put('/post-like/:id', async(req, res) => {
             const id = req.params.id;
             console.log(id)
-            // const filter = { _id: ObjectId(id) }
-            // const likedata = req.body;
-            // const options = { upsert: true };
-            // console.log(post)
-            // const updatepost = {
-            //     $set: {
-            //         like: likrd,
-            //     },
-            // }
-            // const result = await postCollection.updateOne(filter, updatepost, options)
-            // console.log(result)
-            // res.send(result)
+            
+            res.send('result')
         })
         
 
